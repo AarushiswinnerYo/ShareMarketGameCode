@@ -9,9 +9,10 @@ def SignUpURL(user, passwd):
             if e.code == 500:
                 soup1="Fail"
     except urllib.error.URLError as r:
-        soup1="Fail"
+        soup1="Failed"
     else:
         soup1=BeautifulSoup(r,features="html.parser")
+    print(soup1)
     return soup1
 
 def loginURL(user, passwd):
@@ -78,7 +79,6 @@ def testping():
     try:
         r=urllib.request.urlopen("https://sharemarketgame.pythonanywhere.com/")
         soup=BeautifulSoup(r, features="html.parser")
-        print(r.text)
     except urllib.error.HTTPError as e:
         if e.code==500:
             print("Server is down or being updated")

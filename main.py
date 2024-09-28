@@ -9,8 +9,17 @@ def cScreen(frame):
         widget.destroy()
 
 
-def successFullLoginSignup(name, window):
-    window.destroy()
+def gameStart(name, window):
+    cScreen(window)
+    nameText=Label(window, text=name)
+    nameText.pack(side=TOP, anchor="w")
+    but=Button(window, text="Update", command=lambda: print("testing..."))
+    but.place(relx=0.5, rely=0.45)
+    butt=Button(window, text="Update 2", command=lambda: print("Testing..."))
+    butt.place(relx=0.5, rely=0.5)
+
+def successFulLoginSignup(name, window):
+    gameStart(name, window)
 
 
 def delFromLocalList(name, frame):
@@ -38,7 +47,7 @@ def logInBackend(name, frame, passwrd, window, nameList):
     if r == "correct password":
         successLabel = Label(frame, text="Login successful! Launching Game...")
         successLabel.pack()
-        window.after(3000, func=window.destroy)
+        window.after(3000, func=lambda: successFulLoginSignup(name, window))
     elif r == "wrong password":
         failLabel = Label(frame, text="Login Failed! Try again...")
         failLabel.pack()
@@ -99,7 +108,7 @@ def signUpStart(frame, window, username, passwrd):
     password = passwrd.get()
     r = online.SignUpURL(user, password)
     cScreen(frame)
-    if str(r) == "Fail":
+    if str(r) == "Fail" or str(r) == "Failed":
         window.title(" Share Market Game - Signup Failed!")
         failedLabel = Label(frame, text="Signup failed, please try again later :)")
         failedLabel.pack()
@@ -119,7 +128,7 @@ def signUpStart(frame, window, username, passwrd):
         window.title(" Share Market Game - Signup Successful!")
         successLabel = Label(frame, text="Signup Successful! Starting game in 3 seconds!")
         successLabel.pack()
-        window.after(3000, func=window.destroy)
+        window.after(3000, func=lambda: successFulLoginSignup(user, window))
     elif str(r) == "User exists!":
         window.title(" Share Market Game - Signup Failed!")
         failedLabel = Label(frame, text="Signup Unsuccessful! Username already exists!")
@@ -132,14 +141,13 @@ def signUpStart(frame, window, username, passwrd):
 
 def signUpGUI(win=None):
     if win!=None:
-        win.destroy()
+        win.destroy
     else:
         pass
     gui = Tk(className=" Share Market Game - Signup")
-    photo = PhotoImage(file="logo.png")
     gui.geometry("800x600")
-    gui.wm_iconphoto(False, photo)
     x = Frame(gui)
+    print("initialised")
     nameLabel = Label(x, text="Username: ")
     nameLabel.grid(column=0, row=1)
     nameEntry = Text(x, height=1, width=20)
@@ -159,8 +167,10 @@ def mainGame():
     try:
         import users
     except ModuleNotFoundError:
+        print("starting gui")
         signUpGUI()
     else:
+        print("fail")
         logInGUI()
 
 
