@@ -14,9 +14,9 @@ def gameStart(name, window):
     nameText=Label(window, text=name)
     nameText.pack(side=TOP, anchor="w")
     but=Button(window, text="Update", command=lambda: print("testing..."))
-    but.place(relx=0.5, rely=0.45)
+    but.place(relx=0.5, rely=0.45, anchor="c")
     butt=Button(window, text="Update 2", command=lambda: print("Testing..."))
-    butt.place(relx=0.5, rely=0.5)
+    butt.place(relx=0.5, rely=0.5, anchor="c")
 
 def successFulLoginSignup(name, window):
     gameStart(name, window)
@@ -47,6 +47,7 @@ def logInBackend(name, frame, passwrd, window, nameList):
     if r == "correct password":
         successLabel = Label(frame, text="Login successful! Launching Game...")
         successLabel.pack()
+        os.rename("users.py", "users.smgf")
         window.after(3000, func=lambda: successFulLoginSignup(name, window))
     elif r == "wrong password":
         failLabel = Label(frame, text="Login Failed! Try again...")
@@ -125,6 +126,7 @@ def signUpStart(frame, window, username, passwrd):
             x.append(user)
             with open("users.py", "w") as s:
                 s.write(f"users={x}")
+        os.rename("users.py","users.smgf")
         window.title(" Share Market Game - Signup Successful!")
         successLabel = Label(frame, text="Signup Successful! Starting game in 3 seconds!")
         successLabel.pack()
@@ -164,14 +166,13 @@ def signUpGUI(win=None):
 
 
 def mainGame():
-    try:
+    f=os.path.isfile("users.smgf")
+    if f:
+        os.rename("users.smgf","users.py")
         import users
-    except ModuleNotFoundError:
-        print("starting gui")
-        signUpGUI()
-    else:
-        print("fail")
         logInGUI()
+    else:
+        signUpGUI()
 
 
 if __name__ == "__main__":
