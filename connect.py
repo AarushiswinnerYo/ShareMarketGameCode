@@ -29,8 +29,9 @@ def startConnection(window, lab):
 def connect():
     global serverCon
     serverCon=Tk(className=" Share Market Game - Checking connection")
-    serverCon.geometry("800x600")
-    l=Label(serverCon, text="Connecting...", font=("Helvetica", 10))
+    serverCon.geometry("400x300")
+    serverCon.configure(background="black")
+    l=Label(serverCon, text="Connecting...", font=("Tahoma", 10), foreground="white", background="black")
     l.place(relx=0.5, rely=0.5, anchor="c")
     photo=PhotoImage(file="logo.png")
     serverCon.wm_iconphoto(False, photo)

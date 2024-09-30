@@ -9,21 +9,35 @@ def cScreen(frame):
     for widget in frame.winfo_children():
         widget.destroy()
 
+stockNames=["Apple", "Google", "Amazon", "Nestle", "Toyota"]
+
+def startStock(stock, win,name):
+    cScreen(win)
+    nameText=Label(win, text=name)
+    nameText.pack(side=TOP, anchor="w")
+    win.title(stockNames[stock-1])
+    frame=Frame(win)
+    backBut=Button(frame, text="Main Menu", command=lambda: gameStart(name, win))
+    backBut.pack()
+    x=Button(frame,text="Quit", command=exit)
+    x.pack()
+    frame.place(relx=0.5, rely=0.5, anchor="c")
 
 def gameStart(name, window):
     cScreen(window)
+    window.title("Main Menu")
     nameText=Label(window, text=name)
     nameText.pack(side=TOP, anchor="w")
     mF=Frame(window)
-    s1=Button(mF, text="Stock 1", command=lambda: print("Stock 1"), font=("Helvetica", 10))
+    s1=Button(mF, text="Apple", command=lambda: startStock(1, window, name), font=("Helvetica", 10))
     s1.pack(pady=1)
-    s2=Button(mF, text="Stock 2", command=lambda: print("Stock 2"), font=("Helvetica", 10))
+    s2=Button(mF, text="Google", command=lambda: startStock(2, window, name), font=("Helvetica", 10))
     s2.pack(pady=1)
-    s3=Button(mF, text="Stock 3", command=lambda: print("Stock 3"), font=("Helvetica", 10))
+    s3=Button(mF, text="Amazon", command=lambda: startStock(3, window, name), font=("Helvetica", 10))
     s3.pack(pady=1)
-    s4=Button(mF, text="Stock 4", command=lambda: print("Stock 4"), font=("Helvetica", 10))
+    s4=Button(mF, text="Nestle", command=lambda: startStock(4, window, name), font=("Helvetica", 10))
     s4.pack(pady=1)
-    s5=Button(mF, text="Stock 4", command=lambda: print("Stock 5"), font=("Helvetica", 10))
+    s5=Button(mF, text="Toyota", command=lambda: startStock(5, window, name), font=("Helvetica", 10))
     s5.pack(pady=1)
     bal=Button(mF, text="Check Balance", command=lambda: print("Check Balance..."), font=("Helvetica", 10))
     bal.pack(pady=1)
@@ -107,9 +121,6 @@ def logInGUI(signupWindow=None, frame=None, name=None):
                     b = Button(frame, text=i, command=lambda: logInStart(i, frame, signupWindow, names), font=("Helvetica", 10))
                     b.pack()
                     names.append(i)
-                    print(names.index(i))
-                    print(f"sent {i}")
-                print(names)
                 signupWindow.mainloop()
     else:
         names.append(name)
@@ -189,5 +200,4 @@ def mainGame():
 
 if __name__ == "__main__":
     connect.connect()
-    print("hello")
     mainGame()

@@ -21,15 +21,12 @@ def loginURL(user, passwd):
     passwd=str(passwd)
     r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/login?user={user}&passwd={passwd}")
     test=BeautifulSoup(r, features="html.parser")
-    test=str(test)
-    print(test)
     if test == "User not found!":
         soup = "no user"
     elif test == "incorrect!":
         soup = "wrong password"
     else:
         soup="correct password"
-    print(soup)
     return soup
 
 def getInfoURL(username):
