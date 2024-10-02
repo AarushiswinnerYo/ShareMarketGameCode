@@ -13,36 +13,60 @@ stockNames=["Apple", "Google", "Amazon", "Nestle", "Toyota"]
 
 def startStock(stock, win,name):
     cScreen(win)
-    nameText=Label(win, text=name)
-    nameText.pack(side=TOP, anchor="w")
+    nameText=Label(win, text=name, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    nameText.pack(side=TOP, anchor="e")
     win.title(stockNames[stock-1])
+    win.config(background="black")
     frame=Frame(win)
-    backBut=Button(frame, text="Main Menu", command=lambda: gameStart(name, win))
-    backBut.pack()
-    x=Button(frame,text="Quit", command=exit)
-    x.pack()
+    frame.config(background="black")
+    backBut=Button(frame, text="Main Menu", command=lambda: gameStart(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    backBut.pack(pady=2.5)
+    x=Button(frame,text="Quit", command=exit, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    x.pack(pady=2.5)
+    frame.place(relx=0.5, rely=0.5, anchor="c")
+
+def checkProfile(typeOfInfo, win, name):
+    cScreen(win)
+    nameText=Label(win, text=name, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    nameText.pack(side=TOP, anchor="e")
+    frame=Frame(win, background="black")
+    win.configure(background="black")
+    x=online.getInfoURL(name, typeOfInfo)
+    x=str(x)
+    x=eval(x)
+    if typeOfInfo=="Money":
+        infoLabel=Label(frame, text=f"Your current balance is:\n{x["money"]}", font=("Helvetica", 10), background="black", foreground="white")
+        infoLabel.pack(pady=2.5)
+    elif typeOfInfo=="Stocks":
+        infoLabel=Label(frame, text=f"Here are your current holdings:\nApple: {x["stock1"]}\nGoogle: {x["stock2"]}\nAmazon: {x["stock3"]}\nNestle: {x["stock4"]}\nToyota: {x["stock5"]}", font=("Helvetica", 10), background="black", foreground="white")
+        infoLabel.pack(pady=2.5)
+    backBut=Button(frame, text="Main Menu", command=lambda: gameStart(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    backBut.pack(pady=2.5)
     frame.place(relx=0.5, rely=0.5, anchor="c")
 
 def gameStart(name, window):
     cScreen(window)
     window.title("Main Menu")
-    nameText=Label(window, text=name)
-    nameText.pack(side=TOP, anchor="w")
-    mF=Frame(window)
-    s1=Button(mF, text="Apple", command=lambda: startStock(1, window, name), font=("Helvetica", 10))
-    s1.pack(pady=1)
-    s2=Button(mF, text="Google", command=lambda: startStock(2, window, name), font=("Helvetica", 10))
-    s2.pack(pady=1)
-    s3=Button(mF, text="Amazon", command=lambda: startStock(3, window, name), font=("Helvetica", 10))
-    s3.pack(pady=1)
-    s4=Button(mF, text="Nestle", command=lambda: startStock(4, window, name), font=("Helvetica", 10))
-    s4.pack(pady=1)
-    s5=Button(mF, text="Toyota", command=lambda: startStock(5, window, name), font=("Helvetica", 10))
-    s5.pack(pady=1)
-    bal=Button(mF, text="Check Balance", command=lambda: print("Check Balance..."), font=("Helvetica", 10))
-    bal.pack(pady=1)
-    stocks=Button(mF, text="Check Stocks", command=lambda: print("Check Stocks..."), font=("Helvetica", 10))
-    stocks.pack(pady=1)
+    nameText=Label(window, text=name, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    nameText.pack(side=TOP, anchor="e")
+    window.configure(background="Black")
+    mF=Frame(window, bg="black")
+    s1=Button(mF, text="Apple", command=lambda: startStock(1, window, name), font=("Helvetica", 10), background="black", foreground="#A2AAAD", activebackground="black", activeforeground="#A2AAAD")
+    s1.pack(pady=2.5)
+    s2=Button(mF, text="Google", command=lambda: startStock(2, window, name), font=("Helvetica", 10), background="#C51C0F", foreground="#F4B400", activebackground="#C51C0F", activeforeground="#F4B400")
+    s2.pack(pady=2.5)
+    s3=Button(mF, text="Amazon", command=lambda: startStock(3, window, name), font=("Helvetica", 10), background="black", foreground="#FF9900", activebackground="black", activeforeground="#FF9900")
+    s3.pack(pady=2.5)
+    s4=Button(mF, text="Nestle", command=lambda: startStock(4, window, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    s4.pack(pady=2.5)
+    s5=Button(mF, text="Toyota", command=lambda: startStock(5, window, name), font=("Helvetica", 10), background="#EB0A1E", foreground="white", activebackground="#EB0A1E", activeforeground="white")
+    s5.pack(pady=2.5)
+    bal=Button(mF, text="Check Balance", command=lambda: checkProfile("Money", window, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    bal.pack(pady=2.5)
+    stocks=Button(mF, text="Check Stocks", command=lambda: checkProfile("Stocks", window, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    stocks.pack(pady=2.5)
+    x=Button(mF,text="Quit", command=exit, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    x.pack(pady=2.5)
     mF.place(relx=0.5, rely=0.5, anchor="c")
 
 def successFulLoginSignup(name, window):
@@ -72,33 +96,38 @@ def logInBackend(name, frame, passwrd, window, nameList):
         writeNames.write(f"users = {nameList}")
     r = online.loginURL(name, passwd)
     if r == "correct password":
-        successLabel = Label(frame, text="Login successful! Launching Game...", font=("Helvetica", 10))
+        successLabel = Label(frame, text="Login successful! Launching Game...", font=("Helvetica", 10), background="black", foreground="white")
         successLabel.pack()
         os.rename("users.py", "users.smgf")
         window.after(3000, func=lambda: successFulLoginSignup(name, window))
     elif r == "wrong password":
-        failLabel = Label(frame, text="Login Failed! Try again...", font=("Helvetica", 10))
+        failLabel = Label(frame, text="Login Failed! Try again...", font=("Helvetica", 10), background="black", foreground="white")
         failLabel.pack()
-        tryAgainButton = Button(frame, text="Try Again", command=lambda: logInStart(name, frame, window, nameList), font=("Helvetica", 10))
+        tryAgainButton = Button(frame, text="Try Again", command=lambda: logInStart(name, frame, window, nameList), font=("Helvetica", 10), background="black", foreground="white",activebackground="black", activeforeground="white")
         tryAgainButton.pack()
+        forgotPassword = Button(frame, text="Forgot Password? E-mail us", command=lambda: os.system("start https://aarushiswinner.netlify.app/help"), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+        forgotPassword.pack()
     elif r == "no user":
-        failLabel = Label(frame, text="Login Failed! Username does not exist!", font=("Helvetica", 10))
+        failLabel = Label(frame, text="Login Failed! Username does not exist!", font=("Helvetica", 10), background="black", foreground="white")
         failLabel.pack()
-        delFromlist = Button(frame, text="Delete account from local storage?", command=lambda: delFromLocalList(name, frame), font=("Helvetica", 10))
+        delFromlist = Button(frame, text="Delete account from local storage?", command=lambda: delFromLocalList(name, frame), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
         delFromlist.pack()
-        support = Button(frame, text="Contact support", command=lambda: os.system("start https://aarushiswinner.netlify.app/help"), font=("Helvetica", 10))
+        support = Button(frame, text="Contact support", command=lambda: os.system("start https://aarushiswinner.netlify.app/help"), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
         support.pack()
 
 
 def logInStart(name, frame, window, lst):
     cScreen(frame)
-    userLabel = Label(frame, text=name, font=("Helvetica", 10))
+    window.configure(background="black")
+    frame.configure(background="black")
+    userLabel = Label(frame, text=name, font=("Helvetica", 10), background="black", foreground="white")
     userLabel.grid(column=1, row=1)
-    passwordLabel = Label(frame, text="Password:", font=("Helvetica", 10))
+    passwordLabel = Label(frame, text="Password:", font=("Helvetica", 10), background="black", foreground="white")
     passwordLabel.grid(column=0, row=2)
-    passwordEntry = Entry(frame, width=20, show="*")
+    passwordEntry = Entry(frame, width=20, show="*", background="#8A8A8A", foreground="white")
     passwordEntry.grid(column=1, row=2)
-    submit = Button(frame, text="Login", command=lambda: logInBackend(name, frame, passwordEntry, window, lst), font=("Helvetica", 10))
+    submit = Button(frame, text="Login", command=lambda: logInBackend(name, frame, passwordEntry, window, lst), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    window.bind("<Return>", (lambda x: logInBackend(name, frame, passwordEntry, window, lst)))
     submit.grid(column=1, row=3)
 
 
@@ -110,7 +139,8 @@ def logInGUI(signupWindow=None, frame=None, name=None):
         signupWindow.wm_iconphoto(False, photo)
         signupWindow.title(" Share Market Game - Login")
         signupWindow.geometry("800x600")
-        frame = Frame(signupWindow)
+        signupWindow.configure(background="black")
+        frame = Frame(signupWindow, background="black")
         if name == None:
             f = os.path.isfile("users.py")
             frame.place(relx=0.5, rely=0.5, anchor="c")
@@ -118,7 +148,7 @@ def logInGUI(signupWindow=None, frame=None, name=None):
                 import users
                 u = users.users
                 for i in u:
-                    b = Button(frame, text=i, command=lambda: logInStart(i, frame, signupWindow, names), font=("Helvetica", 10))
+                    b = Button(frame, text=i, command=lambda: logInStart(i, frame, signupWindow, names), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
                     b.pack()
                     names.append(i)
                 signupWindow.mainloop()
@@ -195,7 +225,11 @@ def mainGame():
         os.rename("users.smgf","users.py")
         logInGUI()
     else:
-        signUpGUI()
+        j=os.path.isfile("users.py")
+        if j:
+            logInGUI()
+        else:
+            signUpGUI()
 
 
 if __name__ == "__main__":

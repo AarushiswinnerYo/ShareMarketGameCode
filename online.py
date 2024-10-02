@@ -29,12 +29,10 @@ def loginURL(user, passwd):
         soup="correct password"
     return soup
 
-def getInfoURL(username):
-    r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/info?user={username}")
+def getInfoURL(username,typeOfInfo):
+    r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/info?user={username}&type={typeOfInfo}")
     soup=BeautifulSoup(r, features="html.parser")
-    print(soup)
-    with open("currentUserData.py", "w") as userData:
-        userData.write(f"data={soup}")
+    return soup
 
 def deleteUserURL(username):
     r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/deleteAccount?user={username}")
