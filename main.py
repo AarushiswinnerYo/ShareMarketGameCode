@@ -13,28 +13,74 @@ stockNames=["Apple", "Google", "Amazon", "Nestle", "Toyota"]
 
 stop=False
 
-def priceUpdate(label, stock):
+def priceUpdate(plabel, stock):
     while True:
         f=online.updatePriceURL(stock)
-        label.config(text=f)
+        plabel.config(text=f)
         time.sleep(5)
         if stop:
             break
 
-def exitFunc():
+def exiting(win):
+    cScreen(win)
+    win.title("Exiting...")
+    frame=Frame(win)
+    exitLabel=Label(frame, text="Quiting Threads...", font=("Helvetica", 10), background="black", foreground="white")
+    exitLabel.pack()
+    frame.place(relx=0.5, rely=0.5, anchor="c")
+    win.after(2000, func=quit)
+    
+def exitFunc(wind):
     global stop
     stop=True
-    quit()
+    exiting(wind)
 
 def  exitThread(name, win):
     global stop
     stop=True
     gameStart(name, win)
 
+def tryAgainBuyStock(stock, name, win):
+    win.destroy()
+    buyStock(stock, name)
+
+def buyStockBack(stock, name, amountText, win):
+    amount=amountText.get()
+    cScreen(win)
+    try:
+        amount=int(amount)
+    except:
+        f=Frame(win, background="black")
+        text=Label(f, text="Enter a valid number, only whole numbers", font=("Helvetica", 10), background="black", foreground="white")
+        text.pack()
+        tryAgain=Button(f, text="Try again", command=lambda: tryAgainBuyStock(stock, name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+        tryAgain.pack()
+        f.place(relx=0.5, rely=0.5, anchor="c")
+    else:
+        print(f"Stock: {stock}, Name: {name}, amount: {amount}")
+        win.destroy()
+
+def buyStock(stock, name):
+    window=Tk(className="Buy Stock")
+    window.geometry("400x300")
+    window.config(background="black")
+    f=Frame(window, background="black")
+    label=Label(f, text=f"Buy stocks of {stockNames[stock-1]}", font=("Helvetica", 10), background="black", foreground="white")
+    label.pack(pady=2.5)
+    amtLabel=Label(f, text="Enter Amount: ", font=("Helvetica", 10), background="black", foreground="white")
+    amtLabel.pack(pady=2.5)
+    amount=Entry(f, font=("Helvetica", 10), background="#8A8A8A", foreground="white", width=5)
+    amount.pack(pady=2.5)
+    sub=Button(f, text="Buy", command=lambda: buyStockBack(stock, name, amount, window), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    sub.pack(pady=2.5)
+    cancel=Button(f, text="Cancel", command=window.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    cancel.pack(pady=2.5)
+    f.place(relx=0.5, rely=0.5, anchor="c")
+
 def startStock(stock, win,name):
     global price
     cScreen(win)
-    nameText=Label(win, text=name, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    nameText=Label(win, text=name, font=("Helvetica", 10), background="black", foreground="white")
     nameText.pack(side=TOP, anchor="e")
     win.title(stockNames[stock-1])
     win.config(background="black")
@@ -44,9 +90,11 @@ def startStock(stock, win,name):
     priceLabel.pack(pady=2.5)
     price=threading.Thread(target=lambda: priceUpdate(priceLabel, stock))
     price.start()
+    buyBut=Button(frame, text="Buy", command=lambda: buyStock(stock, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    buyBut.pack(pady=2.5)
     backBut=Button(frame, text="Main Menu", command=lambda: exitThread(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     backBut.pack(pady=2.5)
-    x=Button(frame,text="Quit", command=exitFunc, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    x=Button(frame,text="Quit", command=lambda: exitFunc(win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     x.pack(pady=2.5)
     frame.place(relx=0.5, rely=0.5, anchor="c")
 
@@ -90,7 +138,7 @@ def gameStart(name, window):
     bal.pack(pady=2.5)
     stocks=Button(mF, text="Check Stocks", command=lambda: checkProfile("Stocks", window, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     stocks.pack(pady=2.5)
-    x=Button(mF,text="Quit", command=exit, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    x=Button(mF,text="Quit", command=lambda: exitFunc(window), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     x.pack(pady=2.5)
     mF.place(relx=0.5, rely=0.5, anchor="c")
 
@@ -122,23 +170,23 @@ def logInBackend(name, frame, passwrd, window, nameList):
     r = online.loginURL(name, passwd)
     if r == "correct password":
         successLabel = Label(frame, text="Login successful! Launching Game...", font=("Helvetica", 10), background="black", foreground="white")
-        successLabel.pack()
+        successLabel.pack(pady=2.5)
         os.rename("users.py", "users.smgf")
         window.after(3000, func=lambda: successFulLoginSignup(name, window))
     elif r == "wrong password":
         failLabel = Label(frame, text="Login Failed! Try again...", font=("Helvetica", 10), background="black", foreground="white")
-        failLabel.pack()
+        failLabel.pack(pady=2.5)
         tryAgainButton = Button(frame, text="Try Again", command=lambda: logInStart(name, frame, window, nameList), font=("Helvetica", 10), background="black", foreground="white",activebackground="black", activeforeground="white")
-        tryAgainButton.pack()
+        tryAgainButton.pack(pady=2.5)
         forgotPassword = Button(frame, text="Forgot Password? E-mail us", command=lambda: os.system("start https://aarushiswinner.netlify.app/help"), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
-        forgotPassword.pack()
+        forgotPassword.pack(pady=2.5)
     elif r == "no user":
         failLabel = Label(frame, text="Login Failed! Username does not exist!", font=("Helvetica", 10), background="black", foreground="white")
-        failLabel.pack()
+        failLabel.pack(pady=2.5)
         delFromlist = Button(frame, text="Delete account from local storage?", command=lambda: delFromLocalList(name, frame), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
-        delFromlist.pack()
+        delFromlist.pack(pady=2.5)
         support = Button(frame, text="Contact support", command=lambda: os.system("start https://aarushiswinner.netlify.app/help"), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
-        support.pack()
+        support.pack(pady=2.5)
 
 
 def logInStart(name, frame, window, lst):
