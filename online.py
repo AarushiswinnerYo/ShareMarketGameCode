@@ -46,7 +46,8 @@ def updatePriceURL(stock):
     except urllib.error.HTTPError as e:
         return "No such stock"
     else:
-        return soup
+        print(int(str(soup)))
+        return str(soup)
 
 def buyURL(username,stock,amount):
     try:

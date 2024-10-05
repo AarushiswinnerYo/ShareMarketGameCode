@@ -3,7 +3,7 @@ import connect
 import online
 from tkinter import *
 import os
-
+import threading
 
 def cScreen(frame):
     for widget in frame.winfo_children():
@@ -11,7 +11,28 @@ def cScreen(frame):
 
 stockNames=["Apple", "Google", "Amazon", "Nestle", "Toyota"]
 
+stop=False
+
+def priceUpdate(label, stock):
+    while True:
+        f=online.updatePriceURL(stock)
+        label.config(text=f)
+        time.sleep(5)
+        if stop:
+            break
+
+def exitFunc():
+    global stop
+    stop=True
+    quit()
+
+def  exitThread(name, win):
+    global stop
+    stop=True
+    gameStart(name, win)
+
 def startStock(stock, win,name):
+    global price
     cScreen(win)
     nameText=Label(win, text=name, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     nameText.pack(side=TOP, anchor="e")
@@ -19,9 +40,13 @@ def startStock(stock, win,name):
     win.config(background="black")
     frame=Frame(win)
     frame.config(background="black")
-    backBut=Button(frame, text="Main Menu", command=lambda: gameStart(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    priceLabel=Label(frame, text="Fetching Price...", font=("Helvetica", 10), background="black", foreground="white")
+    priceLabel.pack(pady=2.5)
+    price=threading.Thread(target=lambda: priceUpdate(priceLabel, stock))
+    price.start()
+    backBut=Button(frame, text="Main Menu", command=lambda: exitThread(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     backBut.pack(pady=2.5)
-    x=Button(frame,text="Quit", command=exit, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    x=Button(frame,text="Quit", command=exitFunc, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     x.pack(pady=2.5)
     frame.place(relx=0.5, rely=0.5, anchor="c")
 
