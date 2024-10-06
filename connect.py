@@ -35,6 +35,6 @@ def connect():
     l.place(relx=0.5, rely=0.5, anchor="c")
     photo=PhotoImage(file="logo.png")
     serverCon.wm_iconphoto(False, photo)
-    serverCon.after(2000, func=lambda: startConnection(serverCon, l))
+    serverCon.after(1000, func=lambda: startConnection(serverCon, l))
     mainloop()
     return

@@ -50,26 +50,14 @@ def updatePriceURL(stock):
         return str(soup)
 
 def buyURL(username,stock,amount):
-    try:
-        r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/buy?user={username}&stock={stock}&amount={amount}")
+        r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/buy?user={username}&amount={amount}&stock={stock}")
         soup=BeautifulSoup(r, features="html.parser")
-    except urllib.error.HTTPError as e:
-        if e.code==406:
-            return "Insufficient money"
-        elif e.code==410:
-            return "Insufficient shares"
-    else:
-        return soup
+        return str(soup)
 
 def sellURL(username,stock, amount):
-    try:
-        r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/sell?user={username}&stock={stock}&amount={amount}")
+        r=urllib.request.urlopen(f"https://sharemarketgame.pythonanywhere.com/sell?user={username}&amount={amount}&stock={stock}")
         soup=BeautifulSoup(r, features="html.parser")
-    except urllib.error.HTTPError as e:
-        if e.code==410:
-            return "Insufficient shares"
-    else:
-        return soup
+        return str(soup)
 
 def testping():
     try:

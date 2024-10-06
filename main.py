@@ -44,6 +44,10 @@ def tryAgainBuyStock(stock, name, win):
     win.destroy()
     buyStock(stock, name)
 
+def tryAgainSellStock(stock, name, win):
+    win.destroy()
+    sellStock(stock, name)
+
 def buyStockBack(stock, name, amountText, win):
     amount=amountText.get()
     cScreen(win)
@@ -52,13 +56,62 @@ def buyStockBack(stock, name, amountText, win):
     except:
         f=Frame(win, background="black")
         text=Label(f, text="Enter a valid number, only whole numbers", font=("Helvetica", 10), background="black", foreground="white")
-        text.pack()
+        text.pack(pady=2.5)
         tryAgain=Button(f, text="Try again", command=lambda: tryAgainBuyStock(stock, name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
-        tryAgain.pack()
+        tryAgain.pack(pady=2.5)
         f.place(relx=0.5, rely=0.5, anchor="c")
     else:
-        print(f"Stock: {stock}, Name: {name}, amount: {amount}")
-        win.destroy()
+        x=online.buyURL(name, stock, amount)
+        if x=="Insufficient Credits":
+            f=Frame(win, background="black")
+            text=Label(f, text="You have Insufficient Funds!\nPlease check and try again.", font=("Helvetica", 10), background="black", foreground="white")
+            text.pack(pady=2.5)
+            tryAgain=Button(f, text="Cancel", command=win.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+            tryAgain.pack(pady=2.5)
+            f.place(relx=0.5, rely=0.5, anchor="c")
+        elif x=="insufficient amount":
+            f=Frame(win, background="black")
+            text=Label(f, text="There seems to be less than request amount of shares.\nPlease try a different stock!\nElse you can wait for someone else to give up their shares!", font=("Helvetica", 10), background="black", foreground="white")
+            text.pack(pady=2.5)
+            tryAgain=Button(f, text="Ok", command=win.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+            tryAgain.pack(pady=2.5)
+            f.place(relx=0.5, rely=0.5, anchor="c")
+        elif x=="Done!":
+            f=Frame(win, background="black")
+            text=Label(f, text="Shares have been purchased!", font=("Helvetica", 10), background="black", foreground="white")
+            text.pack(pady=2.5)
+            tryAgain=Button(f, text="Ok", command=win.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+            tryAgain.pack(pady=2.5)
+            f.place(relx=0.5, rely=0.5, anchor="c")
+
+def sellStockBack(stock, name, amountText, win):
+    amount=amountText.get()
+    cScreen(win)
+    try:
+        amount=int(amount)
+    except:
+        f=Frame(win, background="black")
+        text=Label(f, text="Enter a valid number, only whole numbers", font=("Helvetica", 10), background="black", foreground="white")
+        text.pack(pady=2.5)
+        tryAgain=Button(f, text="Try again", command=lambda: tryAgainSellStock(stock, name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+        tryAgain.pack(pady=2.5)
+        f.place(relx=0.5, rely=0.5, anchor="c")
+    else:
+        x=online.sellURL(name, stock, amount)
+        if x=="Insufficient stocks":
+            f=Frame(win, background="black")
+            text=Label(f, text="You have Insufficient Amount of Shares!\nPlease check and try again.", font=("Helvetica", 10), background="black", foreground="white")
+            text.pack(pady=2.5)
+            tryAgain=Button(f, text="Cancel", command=win.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+            tryAgain.pack(pady=2.5)
+            f.place(relx=0.5, rely=0.5, anchor="c")
+        elif x=="Done!":
+            f=Frame(win, background="black")
+            text=Label(f, text="Shares have been sold!", font=("Helvetica", 10), background="black", foreground="white")
+            text.pack(pady=2.5)
+            tryAgain=Button(f, text="Ok", command=win.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+            tryAgain.pack(pady=2.5)
+            f.place(relx=0.5, rely=0.5, anchor="c")
 
 def buyStock(stock, name):
     window=Tk(className="Buy Stock")
@@ -72,6 +125,23 @@ def buyStock(stock, name):
     amount=Entry(f, font=("Helvetica", 10), background="#8A8A8A", foreground="white", width=5)
     amount.pack(pady=2.5)
     sub=Button(f, text="Buy", command=lambda: buyStockBack(stock, name, amount, window), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    sub.pack(pady=2.5)
+    cancel=Button(f, text="Cancel", command=window.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    cancel.pack(pady=2.5)
+    f.place(relx=0.5, rely=0.5, anchor="c")
+
+def sellStock(stock, name):
+    window=Tk(className="Sell Stock")
+    window.geometry("400x300")
+    window.config(background="black")
+    f=Frame(window, background="black")
+    label=Label(f, text=f"Sell stocks of {stockNames[stock-1]}", font=("Helvetica", 10), background="black", foreground="white")
+    label.pack(pady=2.5)
+    amtLabel=Label(f, text="Enter Amount: ", font=("Helvetica", 10), background="black", foreground="white")
+    amtLabel.pack(pady=2.5)
+    amount=Entry(f, font=("Helvetica", 10), background="#8A8A8A", foreground="white", width=5)
+    amount.pack(pady=2.5)
+    sub=Button(f, text="Sell", command=lambda: sellStockBack(stock, name, amount, window), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     sub.pack(pady=2.5)
     cancel=Button(f, text="Cancel", command=window.destroy, font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     cancel.pack(pady=2.5)
@@ -92,6 +162,8 @@ def startStock(stock, win,name):
     price.start()
     buyBut=Button(frame, text="Buy", command=lambda: buyStock(stock, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     buyBut.pack(pady=2.5)
+    sellBut=Button(frame, text="Sell", command=lambda: sellStock(stock, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
+    sellBut.pack(pady=2.5)
     backBut=Button(frame, text="Main Menu", command=lambda: exitThread(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     backBut.pack(pady=2.5)
     x=Button(frame,text="Quit", command=lambda: exitFunc(win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
@@ -108,10 +180,16 @@ def checkProfile(typeOfInfo, win, name):
     x=str(x)
     x=eval(x)
     if typeOfInfo=="Money":
-        infoLabel=Label(frame, text=f"Your current balance is:\n{x["money"]}", font=("Helvetica", 10), background="black", foreground="white")
+        mon=x["money"]
+        infoLabel=Label(frame, text=f"Your current balance is:\n{mon}", font=("Helvetica", 10), background="black", foreground="white")
         infoLabel.pack(pady=2.5)
     elif typeOfInfo=="Stocks":
-        infoLabel=Label(frame, text=f"Here are your current holdings:\nApple: {x["stock1"]}\nGoogle: {x["stock2"]}\nAmazon: {x["stock3"]}\nNestle: {x["stock4"]}\nToyota: {x["stock5"]}", font=("Helvetica", 10), background="black", foreground="white")
+        stock1h=x["stock1"]
+        stock2h=x["stock2"]
+        stock3h=x["stock3"]
+        stock4h=x["stock4"]
+        stock5h=x["stock5"]
+        infoLabel=Label(frame, text=f"Here are your current holdings:\nApple: {stock1h}\nGoogle: {stock2h}\nAmazon: {stock3h}\nNestle: {stock4h}\nToyota: {stock5h}", font=("Helvetica", 10), background="black", foreground="white")
         infoLabel.pack(pady=2.5)
     backBut=Button(frame, text="Main Menu", command=lambda: gameStart(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     backBut.pack(pady=2.5)
@@ -230,7 +308,6 @@ def logInGUI(signupWindow=None, frame=None, name=None):
         cScreen(frame)
         signupWindow.title(" Share Market Game - Login")
         logInStart(name, frame, signupWindow, names)
-
 
 def signUpStart(frame, window, username, passwrd):
     user = username.get("1.0", "end-1c")
