@@ -9,7 +9,7 @@ def cScreen(frame):
     for widget in frame.winfo_children():
         widget.destroy()
 
-stockNames=["Apple", "Google", "Amazon", "Nestle", "Toyota"]
+stockNames=["Apple", "Google", "Amazon", "Nestle", "Toyota", "Tata"]
 
 stop=False
 
@@ -189,7 +189,8 @@ def checkProfile(typeOfInfo, win, name):
         stock3h=x["stock3"]
         stock4h=x["stock4"]
         stock5h=x["stock5"]
-        infoLabel=Label(frame, text=f"Here are your current holdings:\nApple: {stock1h}\nGoogle: {stock2h}\nAmazon: {stock3h}\nNestle: {stock4h}\nToyota: {stock5h}", font=("Helvetica", 10), background="black", foreground="white")
+        stock6h=x["stock6"]
+        infoLabel=Label(frame, text=f"Here are your current holdings:\nApple: {stock1h}\nGoogle: {stock2h}\nAmazon: {stock3h}\nNestle: {stock4h}\nToyota: {stock5h}\nTata: {stock6h}", font=("Helvetica", 10), background="black", foreground="white")
         infoLabel.pack(pady=2.5)
     backBut=Button(frame, text="Main Menu", command=lambda: gameStart(name, win), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     backBut.pack(pady=2.5)
@@ -212,6 +213,8 @@ def gameStart(name, window):
     s4.pack(pady=2.5)
     s5=Button(mF, text="Toyota", command=lambda: startStock(5, window, name), font=("Helvetica", 10), background="#EB0A1E", foreground="white", activebackground="#EB0A1E", activeforeground="white")
     s5.pack(pady=2.5)
+    s6=Button(mF, text="Tata", command=lambda: startStock(6, window, name), font=("Helvetica", 10), background="#4F84C4", foreground="white", activebackground="#4F84C4", activeforeground="white")
+    s6.pack(pady=2.5)
     bal=Button(mF, text="Check Balance", command=lambda: checkProfile("Money", window, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
     bal.pack(pady=2.5)
     stocks=Button(mF, text="Check Stocks", command=lambda: checkProfile("Stocks", window, name), font=("Helvetica", 10), background="black", foreground="white", activebackground="black", activeforeground="white")
